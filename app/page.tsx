@@ -1,5 +1,11 @@
-export default function Home() {
+import { Map } from '@/src/components/map';
+
+export default function Page() {
   return (
-  <div></div>
+    <main>
+      <div className="map-container">
+        <Map />
+      </div>
+    </main>
   );
 }
