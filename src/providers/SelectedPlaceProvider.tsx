@@ -21,6 +21,7 @@ export interface Place {
     wifi_speed: string;
   };
   vibe_tag: string[];
+  image_url?: string;
 }
 
 interface SelectedPlaceContextValue {

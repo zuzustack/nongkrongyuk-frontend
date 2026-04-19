@@ -4,6 +4,7 @@ import { X, Wifi, Plug, ChurchIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelectedPlace } from "@/src/providers/SelectedPlaceProvider";
 
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800&auto=format&fit=crop";
 interface PlaceDetailDesktopProps {
   sidebarWidth: number;
 }
@@ -82,11 +83,13 @@ export default function PlaceDetailDesktop({ sidebarWidth }: PlaceDetailDesktopP
           "
           style={{ left: sidebarWidth }}
         >
-          {/* Gradient header */}
+          {/* Image header */}
           <div
-            className="relative shrink-0 h-[160px] flex items-end p-5"
+            className="relative shrink-0 h-[220px] flex items-end p-5"
             style={{
-              background: "linear-gradient(160deg, #112D4E 0%, #3F72AF 100%)",
+              backgroundImage: `linear-gradient(to top, rgba(17, 45, 78, 0.95) 0%, rgba(63, 114, 175, 0.2) 100%), url(${selectedPlace.image_url || DEFAULT_IMAGE})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
             }}
           >
             <button
@@ -95,19 +98,19 @@ export default function PlaceDetailDesktop({ sidebarWidth }: PlaceDetailDesktopP
               className="
                 absolute top-4 right-4
                 w-8 h-8 flex items-center justify-center
-                rounded-full bg-white/20 text-white
-                hover:bg-white/30 transition-colors cursor-pointer
+                rounded-full bg-black/30 backdrop-blur-md text-white
+                hover:bg-black/50 transition-colors cursor-pointer
               "
               aria-label="Tutup detail"
             >
               <X size={16} />
             </button>
 
-            <div>
-              <span className="inline-block text-[11px] font-semibold tracking-wide uppercase text-white/70 mb-1">
+            <div className="z-10 relative">
+              <span className="inline-block text-[11px] font-semibold tracking-wide uppercase text-white mb-1 bg-accent/80 px-2 py-0.5 rounded backdrop-blur-sm">
                 {selectedPlace.category}
               </span>
-              <h2 className="text-xl font-bold text-white leading-tight">
+              <h2 className="text-2xl font-bold text-white leading-tight drop-shadow-md">
                 {selectedPlace.name}
               </h2>
             </div>
