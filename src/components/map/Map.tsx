@@ -16,14 +16,21 @@ export default function Map() {
 
   if (isLoading)
     return (
-      <div className="h-[500px] flex items-center justify-center bg-gray-100 italic">
-        Memuat data tempat...
+      <div className="w-full h-full flex items-center justify-center bg-surface">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-accent/30 border-t-accent rounded-full animate-spin" />
+          <span className="text-sm text-muted font-medium">Memuat peta...</span>
+        </div>
       </div>
     );
   if (isError)
     return (
-      <div className="h-[500px] flex items-center justify-center text-red-500">
-        Gagal memuat data.
+      <div className="w-full h-full flex items-center justify-center bg-surface">
+        <div className="flex flex-col items-center gap-2 text-center px-6">
+          <span className="text-3xl">⚠️</span>
+          <p className="text-sm text-red-500 font-medium">Gagal memuat data.</p>
+          <p className="text-xs text-muted">Silakan coba lagi nanti</p>
+        </div>
       </div>
     );
 
@@ -31,7 +38,8 @@ export default function Map() {
     <MapContainer
       center={[-7.2575, 112.7521]}
       zoom={13}
-      style={{ height: "600px", width: "100%", borderRadius: "12px" }}
+      style={{ height: "100%", width: "100%" }}
+      zoomControl={false}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -50,26 +58,26 @@ export default function Map() {
           icon={defaultIcon}
         >
           <Popup>
-            <div className="min-w-[150px]">
-              <h3 className="font-bold text-lg">{place.name}</h3>
-              <p className="text-sm text-gray-600 mb-1">📍 {place.address}</p>
-              <div className="flex gap-1 flex-wrap mb-2">
-                <span className="bg-orange-100 text-orange-700 text-[10px] px-2 py-0.5 rounded">
+            <div className="min-w-[180px]">
+              <h3 className="font-bold text-sm text-primary">{place.name}</h3>
+              <p className="text-xs text-muted mt-1">📍 {place.address}</p>
+              <div className="flex gap-1 flex-wrap mt-2">
+                <span className="bg-accent/10 text-accent text-[10px] px-2 py-0.5 rounded-full font-medium">
                   {place.category}
                 </span>
                 {place.vibe_tag?.map((tag: string) => (
                   <span
                     key={tag}
-                    className="bg-blue-50 text-blue-600 text-[10px] px-2 py-0.5 rounded italic"
+                    className="bg-surface text-muted text-[10px] px-2 py-0.5 rounded-full italic"
                   >
                     #{tag}
                   </span>
                 ))}
               </div>
-              <div className="text-[11px] border-t pt-2">
+              <div className="text-[11px] border-t border-border mt-2 pt-2 space-y-0.5">
                 <p>
                   Wi-Fi:{" "}
-                  <span className="font-semibold">
+                  <span className="font-semibold text-primary">
                     {place.facilities?.wifi_speed}
                   </span>
                 </p>
