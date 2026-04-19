@@ -1,7 +1,9 @@
 "use client";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { usePlaces } from "@/src/hooks/UsePlace";
+import { useSelectedPlace } from "@/src/providers/SelectedPlaceProvider";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
 // Perbaikan icon default Leaflet untuk Next.js
 const defaultIcon = L.icon({
@@ -11,8 +13,18 @@ const defaultIcon = L.icon({
   iconAnchor: [12, 41],
 });
 
+// Icon aktif saat marker dipilih
+const activeIcon = L.icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [30, 49],
+  iconAnchor: [15, 49],
+  className: "marker-selected",
+});
+
 export default function Map() {
   const { data: places, isLoading, isError } = usePlaces();
+  const { selectedPlace, setSelectedPlace } = useSelectedPlace();
 
   if (isLoading)
     return (
@@ -23,6 +35,7 @@ export default function Map() {
         </div>
       </div>
     );
+
   if (isError)
     return (
       <div className="w-full h-full flex items-center justify-center bg-surface">
@@ -46,47 +59,21 @@ export default function Map() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {places?.map((place: any) => (
-        <Marker
-          eventHandlers={{
-            click: (e) => {
-              console.log("Marker diklik:", place.name);
-            },
-          }}
-          key={place.id}
-          position={place.position}
-          icon={defaultIcon}
-        >
-          <Popup>
-            <div className="min-w-[180px]">
-              <h3 className="font-bold text-sm text-primary">{place.name}</h3>
-              <p className="text-xs text-muted mt-1">📍 {place.address}</p>
-              <div className="flex gap-1 flex-wrap mt-2">
-                <span className="bg-accent/10 text-accent text-[10px] px-2 py-0.5 rounded-full font-medium">
-                  {place.category}
-                </span>
-                {place.vibe_tag?.map((tag: string) => (
-                  <span
-                    key={tag}
-                    className="bg-surface text-muted text-[10px] px-2 py-0.5 rounded-full italic"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-              <div className="text-[11px] border-t border-border mt-2 pt-2 space-y-0.5">
-                <p>
-                  Wi-Fi:{" "}
-                  <span className="font-semibold text-primary">
-                    {place.facilities?.wifi_speed}
-                  </span>
-                </p>
-                <p>Musholla: {place.facilities?.has_musholla ? "✅" : "❌"}</p>
-              </div>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      {places?.map((place: any) => {
+        const isSelected = selectedPlace?.id === place.id;
+        return (
+          <Marker
+            key={place.id}
+            position={place.position}
+            icon={isSelected ? activeIcon : defaultIcon}
+            eventHandlers={{
+              click: () => {
+                setSelectedPlace(place);
+              },
+            }}
+          />
+        );
+      })}
     </MapContainer>
   );
 }

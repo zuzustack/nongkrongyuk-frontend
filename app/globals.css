@@ -31,3 +31,8 @@ body {
   border-radius: 0 !important;
   z-index: 0;
 }
+
+/* Marker aktif — efek highlight */
+.marker-selected {
+  filter: hue-rotate(140deg) saturate(2) drop-shadow(0 0 6px rgba(63, 114, 175, 0.8));
+}
