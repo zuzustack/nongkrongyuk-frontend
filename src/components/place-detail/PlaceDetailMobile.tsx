@@ -5,6 +5,8 @@ import { X, Wifi, Plug, ChurchIcon, GripHorizontal } from "lucide-react";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
 import { useSelectedPlace } from "@/src/providers/SelectedPlaceProvider";
 
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800&auto=format&fit=crop";
+
 const PRICE_LABEL: Record<number, string> = {
   0: "Gratis",
   1: "Murah",
@@ -111,23 +113,26 @@ export default function PlaceDetailMobile() {
               className="flex-1 overflow-y-auto overscroll-contain"
               style={{ touchAction: "pan-y" }}
             >
-              {/* Place Header */}
+              {/* Place Header Image */}
               <div
-                className="px-5 pt-2 pb-5 shrink-0"
+                className="px-5 pt-12 pb-5 shrink-0 relative flex flex-col justify-end min-h-[220px]"
                 style={{
-                  background:
-                    "linear-gradient(160deg, #112D4E 0%, #3F72AF 100%)",
+                  backgroundImage: `linear-gradient(to top, rgba(17, 45, 78, 0.95) 0%, rgba(63, 114, 175, 0.3) 100%), url(${selectedPlace.image_url || DEFAULT_IMAGE})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                 }}
               >
-                <span className="inline-block text-[11px] font-semibold tracking-wide uppercase text-white/70 mb-1">
-                  {selectedPlace.category}
-                </span>
-                <h2 className="text-xl font-bold text-white leading-tight">
-                  {selectedPlace.name}
-                </h2>
-                <p className="text-[12px] text-white/70 mt-1 leading-snug">
-                  📍 {selectedPlace.address}
-                </p>
+                <div className="z-10 relative">
+                  <span className="inline-block text-[11px] font-semibold tracking-wide uppercase text-white mb-1 bg-accent/80 px-2 py-0.5 rounded backdrop-blur-sm">
+                    {selectedPlace.category}
+                  </span>
+                  <h2 className="text-2xl font-bold text-white leading-tight drop-shadow-md">
+                    {selectedPlace.name}
+                  </h2>
+                  <p className="text-[12px] text-white/90 mt-1.5 leading-snug flex items-center gap-1 drop-shadow">
+                    <span className="text-sm">📍</span> {selectedPlace.address}
+                  </p>
+                </div>
               </div>
 
               {/* Detail Content */}
