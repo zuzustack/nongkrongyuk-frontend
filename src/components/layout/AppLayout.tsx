@@ -5,6 +5,7 @@ import Sidebar from "@/src/components/sidebar/Sidebar";
 import BottomNav from "@/src/components/bottom-nav/BottomNav";
 import PlaceDetailDesktop from "@/src/components/place-detail/PlaceDetailDesktop";
 import PlaceDetailMobile from "@/src/components/place-detail/PlaceDetailMobile";
+import SearchBar from "@/src/components/search/SearchBar";
 import { useSelectedPlace } from "@/src/providers/SelectedPlaceProvider";
 
 function useIsDesktop() {
@@ -49,6 +50,9 @@ function AppLayoutInner({ children }: AppLayoutProps) {
 
       {/* Desktop Place Detail Panel — sits next to the sidebar */}
       <PlaceDetailDesktop sidebarWidth={sidebarW} />
+
+      {/* Search Bar — floats on top of map (mobile) / next to sidebar (desktop) */}
+      <SearchBar desktopLeft={sidebarW} desktopWidth={detailW} />
 
       {/* Main content — full width on mobile, offset on desktop */}
       <main
