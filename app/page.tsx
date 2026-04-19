@@ -1,11 +1,12 @@
 import { Map } from '@/src/components/map';
+import AppLayout from '@/src/components/layout/AppLayout';
 
 export default function Page() {
   return (
-    <main>
-      <div className="map-container">
+    <AppLayout>
+      <div className="w-full h-full">
         <Map />
       </div>
-    </main>
+    </AppLayout>
   );
 }
