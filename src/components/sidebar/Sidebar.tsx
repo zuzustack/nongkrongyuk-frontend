@@ -21,6 +21,7 @@ interface SidebarProps {
   onMenuChange: (id: string) => void;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
+  filterBadgeCount?: number;
 }
 
 export default function Sidebar({
@@ -28,6 +29,7 @@ export default function Sidebar({
   onMenuChange,
   isCollapsed,
   onToggleCollapse,
+  filterBadgeCount = 0,
 }: SidebarProps) {
   return (
     <aside
@@ -85,11 +87,16 @@ export default function Sidebar({
               )}
 
               <span
-                className={`flex-shrink-0 transition-colors duration-200 ${
+                className={`flex-shrink-0 relative transition-colors duration-200 ${
                   isActive ? "text-accent" : "text-primary/50 group-hover:text-primary/70"
                 }`}
               >
                 {item.icon}
+                {item.id === "filter" && filterBadgeCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-accent text-white text-[9px] font-bold flex items-center justify-center">
+                    {filterBadgeCount}
+                  </span>
+                )}
               </span>
 
               {!isCollapsed && (

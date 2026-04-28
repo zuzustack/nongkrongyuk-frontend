@@ -2,6 +2,7 @@
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { usePlaces } from "@/src/hooks/UsePlace";
 import { useSelectedPlace } from "@/src/providers/SelectedPlaceProvider";
+import { useFilter } from "@/src/providers/FilterProvider";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -25,6 +26,10 @@ const activeIcon = L.icon({
 export default function Map() {
   const { data: places, isLoading, isError } = usePlaces();
   const { selectedPlace, setSelectedPlace } = useSelectedPlace();
+  const { applyFilters } = useFilter();
+
+  // Apply active filters — only filtered markers are rendered
+  const visiblePlaces = places ? applyFilters(places as any) : [];
 
   if (isLoading)
     return (
@@ -59,7 +64,7 @@ export default function Map() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {places?.map((place: any) => {
+      {visiblePlaces.map((place: any) => {
         const isSelected = selectedPlace?.id === place.id;
         return (
           <Marker

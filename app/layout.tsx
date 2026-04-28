@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import ReactQueryProvider from '@/src/providers/ReactQuery';
 import { SelectedPlaceProvider } from '@/src/providers/SelectedPlaceProvider';
+import { FilterProvider } from '@/src/providers/FilterProvider';
 import './globals.css';
 
 export const metadata = {
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <ReactQueryProvider>
           <SelectedPlaceProvider>
-            {children}
+            <FilterProvider>
+              {children}
+            </FilterProvider>
           </SelectedPlaceProvider>
         </ReactQueryProvider>
       </body>

@@ -5,6 +5,7 @@ import { Search, X, MapPin, Wifi, Plug } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePlaces } from "@/src/hooks/UsePlace";
 import { useSelectedPlace, type Place } from "@/src/providers/SelectedPlaceProvider";
+import { useFilter } from "@/src/providers/FilterProvider";
 
 interface SearchBarProps {
   /** px value — left offset on desktop so bar sits right of the sidebar */
@@ -16,6 +17,7 @@ interface SearchBarProps {
 export default function SearchBar({ desktopLeft, desktopWidth }: SearchBarProps) {
   const { data: places } = usePlaces();
   const { selectedPlace, setSelectedPlace } = useSelectedPlace();
+  const { applyFilters } = useFilter();
 
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -33,18 +35,19 @@ export default function SearchBar({ desktopLeft, desktopWidth }: SearchBarProps)
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filter places based on query
+  // Filter places: intersect search query with active filters
   const filteredPlaces = useMemo(() => {
     if (!places || query.trim().length === 0) return [];
     const q = query.toLowerCase();
-    return (places as Place[]).filter(
+    const searchMatched = (places as Place[]).filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
         p.address.toLowerCase().includes(q) ||
         p.vibe_tag.some((tag) => tag.toLowerCase().includes(q))
     );
-  }, [places, query]);
+    return applyFilters(searchMatched);
+  }, [places, query, applyFilters]);
 
   const showDropdown = isFocused && query.trim().length > 0;
 

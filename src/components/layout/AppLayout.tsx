@@ -6,7 +6,10 @@ import BottomNav from "@/src/components/bottom-nav/BottomNav";
 import PlaceDetailDesktop from "@/src/components/place-detail/PlaceDetailDesktop";
 import PlaceDetailMobile from "@/src/components/place-detail/PlaceDetailMobile";
 import SearchBar from "@/src/components/search/SearchBar";
+import FilterPanelDesktop from "@/src/components/filter/FilterPanelDesktop";
+import FilterPanelMobile from "@/src/components/filter/FilterPanelMobile";
 import { useSelectedPlace } from "@/src/providers/SelectedPlaceProvider";
+import { useFilter } from "@/src/providers/FilterProvider";
 
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -28,33 +31,52 @@ function AppLayoutInner({ children }: AppLayoutProps) {
   const [activeMenu, setActiveMenu] = useState("explore");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { selectedPlace } = useSelectedPlace();
+  const { activeFilterCount } = useFilter();
   const isDesktop = useIsDesktop();
 
   const sidebarW = isCollapsed ? 72 : 260;
   const detailW = 320;
 
-  // Compute left margin only on desktop (sidebar + detail panel are fixed positioned)
+  const isFilterOpen = activeMenu === "filter";
+
+  // If filter panel is open on desktop, it occupies the same slot as detail panel
+  const rightPanelOpen = selectedPlace || isFilterOpen;
   const mainMarginLeft = isDesktop
-    ? sidebarW + (selectedPlace ? detailW : 0)
+    ? sidebarW + (rightPanelOpen ? detailW : 0)
     : 0;
+
+  function handleMenuChange(id: string) {
+    // If clicking an already-active non-explore menu, toggle it off
+    if (id === activeMenu && id !== "explore") {
+      setActiveMenu("explore");
+    } else {
+      setActiveMenu(id);
+    }
+
+    // When a place is selected and user clicks explore, keep place detail open
+  }
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-      {/* Desktop Sidebar — hidden on mobile (handled inside Sidebar component) */}
+      {/* Desktop Sidebar */}
       <Sidebar
         activeMenu={activeMenu}
-        onMenuChange={setActiveMenu}
+        onMenuChange={handleMenuChange}
         isCollapsed={isCollapsed}
         onToggleCollapse={() => setIsCollapsed((prev) => !prev)}
+        filterBadgeCount={activeFilterCount}
       />
 
-      {/* Desktop Place Detail Panel — sits next to the sidebar */}
-      <PlaceDetailDesktop sidebarWidth={sidebarW} />
+      {/* Desktop Place Detail Panel */}
+      {!isFilterOpen && <PlaceDetailDesktop sidebarWidth={sidebarW} />}
 
-      {/* Search Bar — floats on top of map (mobile) / next to sidebar (desktop) */}
+      {/* Desktop Filter Panel */}
+      <FilterPanelDesktop sidebarWidth={sidebarW} isOpen={isFilterOpen} />
+
+      {/* Search Bar */}
       <SearchBar desktopLeft={sidebarW} desktopWidth={detailW} />
 
-      {/* Main content — full width on mobile, offset on desktop */}
+      {/* Main content */}
       <main
         className="flex-1 h-screen pb-[60px] md:pb-0 transition-all duration-300 ease-in-out"
         style={{ marginLeft: mainMarginLeft }}
@@ -64,8 +86,18 @@ function AppLayoutInner({ children }: AppLayoutProps) {
 
       {/* Mobile Bottom Nav — hidden when a place is selected */}
       {!selectedPlace && (
-        <BottomNav activeMenu={activeMenu} onMenuChange={setActiveMenu} />
+        <BottomNav
+          activeMenu={activeMenu}
+          onMenuChange={handleMenuChange}
+          filterBadgeCount={activeFilterCount}
+        />
       )}
+
+      {/* Mobile Filter Bottom Sheet */}
+      <FilterPanelMobile
+        isOpen={isFilterOpen && !isDesktop}
+        onClose={() => setActiveMenu("explore")}
+      />
 
       {/* Mobile Bottom Sheet Detail */}
       <PlaceDetailMobile />
