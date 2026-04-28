@@ -18,9 +18,10 @@ const NAV_ITEMS: NavItem[] = [
 interface BottomNavProps {
   activeMenu: string;
   onMenuChange: (id: string) => void;
+  filterBadgeCount?: number;
 }
 
-export default function BottomNav({ activeMenu, onMenuChange }: BottomNavProps) {
+export default function BottomNav({ activeMenu, onMenuChange, filterBadgeCount = 0 }: BottomNavProps) {
   return (
     <nav
       className="
@@ -56,13 +57,18 @@ export default function BottomNav({ activeMenu, onMenuChange }: BottomNavProps) 
 
             <span
               className={`
-                flex items-center justify-center
+                flex items-center justify-center relative
                 w-10 h-7 rounded-full
                 transition-all duration-200
                 ${isActive ? "bg-accent/10 scale-105" : ""}
               `}
             >
               {item.icon}
+              {item.id === "filter" && filterBadgeCount > 0 && (
+                <span className="absolute -top-1.5 -right-1 min-w-[15px] h-[15px] px-0.5 rounded-full bg-accent text-white text-[8px] font-bold flex items-center justify-center">
+                  {filterBadgeCount}
+                </span>
+              )}
             </span>
 
             <span
