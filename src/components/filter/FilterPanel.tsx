@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Wifi, Plug, ChurchIcon, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { useFilter, type FilterState } from "@/src/providers/FilterProvider";
-import { usePlaces } from "@/src/hooks/UsePlace";
+import { useCafes } from "@/src/hooks/UseCafe";
 import type { Place } from "@/src/providers/SelectedPlaceProvider";
 
 const PRICE_OPTIONS = [
@@ -19,7 +19,7 @@ interface FilterPanelProps {
 
 export default function FilterPanel({ onClose }: FilterPanelProps) {
   const { filters, setFilters, resetFilters, activeFilterCount } = useFilter();
-  const { data: places } = usePlaces();
+  const { data: places } = useCafes();
 
   // Derive unique categories & vibe tags dynamically from data
   const { categories, vibeTags } = useMemo(() => {

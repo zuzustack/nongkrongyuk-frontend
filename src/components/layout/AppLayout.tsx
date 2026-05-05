@@ -73,12 +73,14 @@ function AppLayoutInner({ children }: AppLayoutProps) {
       {/* Desktop Filter Panel */}
       <FilterPanelDesktop sidebarWidth={sidebarW} isOpen={isFilterOpen} />
 
-      {/* Search Bar */}
-      <SearchBar desktopLeft={sidebarW} desktopWidth={detailW} />
+      {/* Desktop Place Detail Panel */}
+      {!isFilterOpen && (
+        <SearchBar desktopLeft={sidebarW} desktopWidth={detailW} />
+      )}
 
       {/* Main content */}
       <main
-        className="flex-1 h-screen pb-[60px] md:pb-0 transition-all duration-300 ease-in-out"
+        className="flex-1 h-screen pb-15 md:pb-0 transition-all duration-300 ease-in-out"
         style={{ marginLeft: mainMarginLeft }}
       >
         {children}

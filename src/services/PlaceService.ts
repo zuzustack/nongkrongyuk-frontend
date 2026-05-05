@@ -39,8 +39,6 @@ export const fetchMosques = async () => {
         id: doc.id,
         name: data.name || "Unknown Location",
         address: data.address || "",
-        category: data.category || "General",
-        price_level: data.price_level ?? 0,
         
         // 1. Konversi GeoPoint ke Array [lat, lng]
         position: data.location 
@@ -49,14 +47,6 @@ export const fetchMosques = async () => {
         
         // 2. Konversi Firebase Timestamp ke ISO String / Date
         last_updated: data.last_updated?.toDate().toISOString() || new Date().toISOString(),
-
-        // 3. Map & Array tetap dipertahankan
-        facilities: {
-          has_musholla: data.facilities?.has_musholla ?? false,
-          has_power_outlets: data.facilities?.has_power_outlets ?? false,
-          wifi_speed: data.facilities?.wifi_speed || "None"
-        },
-        vibe_tag: data.vibe_tag || []
       };
   });
 };
