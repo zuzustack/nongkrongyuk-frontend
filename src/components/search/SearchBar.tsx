@@ -3,9 +3,13 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Search, X, MapPin, Wifi, Plug } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePlaces } from "@/src/hooks/UsePlace";
-import { useSelectedPlace, type Place } from "@/src/providers/SelectedPlaceProvider";
+import { useCafes } from "@/src/hooks/UseCafe";
+import {
+  useSelectedPlace,
+  type Place,
+} from "@/src/providers/SelectedPlaceProvider";
 import { useFilter } from "@/src/providers/FilterProvider";
+import { useMap } from "react-leaflet";
 
 interface SearchBarProps {
   /** px value — left offset on desktop so bar sits right of the sidebar */
@@ -14,8 +18,11 @@ interface SearchBarProps {
   desktopWidth: number;
 }
 
-export default function SearchBar({ desktopLeft, desktopWidth }: SearchBarProps) {
-  const { data: places } = usePlaces();
+export default function SearchBar({
+  desktopLeft,
+  desktopWidth,
+}: SearchBarProps) {
+  const { data: places } = useCafes();
   const { selectedPlace, setSelectedPlace } = useSelectedPlace();
   const { applyFilters } = useFilter();
 
@@ -27,7 +34,10 @@ export default function SearchBar({ desktopLeft, desktopWidth }: SearchBarProps)
   // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
         setIsFocused(false);
       }
     }
@@ -44,7 +54,7 @@ export default function SearchBar({ desktopLeft, desktopWidth }: SearchBarProps)
         p.name.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
         p.address.toLowerCase().includes(q) ||
-        p.vibe_tag.some((tag) => tag.toLowerCase().includes(q))
+        p.vibe_tag.some((tag) => tag.toLowerCase().includes(q)),
     );
     return applyFilters(searchMatched);
   }, [places, query, applyFilters]);
@@ -142,7 +152,10 @@ interface SearchInputProps {
 }
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-  function SearchInput({ query, onChange, onFocus, onClear, selectedPlace, onCloseDetail }, ref) {
+  function SearchInput(
+    { query, onChange, onFocus, onClear, selectedPlace, onCloseDetail },
+    ref,
+  ) {
     return (
       <div
         className="
@@ -194,7 +207,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 interface ResultsDropdownProps {
@@ -215,13 +228,14 @@ function ResultsDropdown({ results, query, onSelect }: ResultsDropdownProps) {
         bg-white/60 backdrop-blur-xl
         border border-white/40
         shadow-xl shadow-black/8
-        max-h-[350px] overflow-y-auto
+        max-h-87 overflow-y-auto
       "
     >
       {results.length === 0 ? (
         <div className="px-5 py-8 text-center">
           <p className="text-sm text-muted">
-            Tidak ada tempat untuk &quot;<span className="font-semibold text-primary">{query}</span>&quot;
+            Tidak ada tempat untuk &quot;
+            <span className="font-semibold text-primary">{query}</span>&quot;
           </p>
         </div>
       ) : (
@@ -243,7 +257,7 @@ function ResultsDropdown({ results, query, onSelect }: ResultsDropdownProps) {
                   className="
                     mt-0.5 shrink-0 w-9 h-9 rounded-xl
                     flex items-center justify-center
-                    bg-gradient-to-br from-primary to-accent
+                    bg-linear-to-br from-primary to-accent
                     text-white
                   "
                 >

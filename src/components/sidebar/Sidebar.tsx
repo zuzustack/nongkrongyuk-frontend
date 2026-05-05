@@ -38,13 +38,13 @@ export default function Sidebar({
         fixed top-0 left-0 h-screen z-40
         bg-white border-r border-border
         transition-all duration-300 ease-in-out
-        ${isCollapsed ? "w-[72px]" : "w-[260px]"}
+        ${isCollapsed ? "w-18" : "w-65"}
       `}
     >
       {/* Brand Header */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-border">
         <div
-          className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+          className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
           style={{ background: "linear-gradient(135deg, #112D4E 0%, #3F72AF 100%)" }}
         >
           N
@@ -83,17 +83,17 @@ export default function Sidebar({
             >
               {/* Active indicator bar */}
               {isActive && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-accent rounded-r-full" />
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.75 h-6 bg-accent rounded-r-full" />
               )}
 
               <span
-                className={`flex-shrink-0 relative transition-colors duration-200 ${
+                className={`shrink-0 relative transition-colors duration-200 ${
                   isActive ? "text-accent" : "text-primary/50 group-hover:text-primary/70"
                 }`}
               >
                 {item.icon}
                 {item.id === "filter" && filterBadgeCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-accent text-white text-[9px] font-bold flex items-center justify-center">
+                  <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 rounded-full bg-accent text-white text-[9px] font-bold flex items-center justify-center">
                     {filterBadgeCount}
                   </span>
                 )}

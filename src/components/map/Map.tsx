@@ -12,9 +12,10 @@ import { useCafes } from "@/src/hooks/UseCafe";
 import { useMosques } from "@/src/hooks/UseMosque";
 import { useSelectedPlace } from "@/src/providers/SelectedPlaceProvider";
 import { useFilter } from "@/src/providers/FilterProvider";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import MapService from "@/src/services/MapService";
 
 // Perbaikan icon default Leaflet untuk Next.js
 const defaultIcon = L.icon({
@@ -96,6 +97,15 @@ function MosqueMarker({ mosque }: any) {
 // Marker untuk cafe
 function CafeMarker({ cafe, isSelected, setSelectedPlace, markerRefs }: any) {
   const map = useMap();
+
+  // Watch SelectedPlace
+  useEffect(() => {
+    if (isSelected) {
+      map.flyTo(cafe.position, 17, {
+        duration: 0.5,
+      });
+    }
+  }, [isSelected]);
 
   return (
     <Marker
@@ -261,7 +271,7 @@ export default function Map() {
 
       {selectedPlace &&
         (nearbyMosques || []).map((mosque: any) => (
-          <MosqueMarker key={`mosque-${mosque.id}`} mosque={mosque}/>
+          <MosqueMarker key={`mosque-${mosque.id}`} mosque={mosque} />
         ))}
     </MapContainer>
   );
