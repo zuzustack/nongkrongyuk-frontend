@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPlaces } from "@/src/services/PlaceService";
 
-export function usePlaces() {
+export function useCafes() {
   return useQuery({
-    queryKey: ["places"],
+    queryKey: ["cafes"],
     queryFn: fetchPlaces,
   });
 }
