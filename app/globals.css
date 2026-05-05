@@ -32,6 +32,16 @@ body {
   z-index: 0;
 }
 
+.custom-popup .leaflet-popup-tip {
+  display: none;
+}
+
+.custom-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 /* Marker aktif — efek highlight */
 .marker-selected {
   filter: hue-rotate(140deg) saturate(2) drop-shadow(0 0 6px rgba(63, 114, 175, 0.8));
