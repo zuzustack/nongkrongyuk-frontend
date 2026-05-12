@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { Search, X, MapPin, Wifi, Plug } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCafes } from "@/src/hooks/UseCafe";
+import { useMosques } from "@/src/hooks/UseMosque";
 import {
   useSelectedPlace,
   type Place,
@@ -23,6 +24,7 @@ export default function SearchBar({
   desktopWidth,
 }: SearchBarProps) {
   const { data: places } = useCafes();
+  const { data: mosques } = useMosques();
   const { selectedPlace, setSelectedPlace } = useSelectedPlace();
   const { applyFilters } = useFilter();
 
@@ -56,8 +58,8 @@ export default function SearchBar({
         p.address.toLowerCase().includes(q) ||
         p.vibe_tag.some((tag) => tag.toLowerCase().includes(q)),
     );
-    return applyFilters(searchMatched);
-  }, [places, query, applyFilters]);
+    return applyFilters(searchMatched, (mosques as any) || []);
+  }, [places, query, applyFilters, mosques]);
 
   const showDropdown = isFocused && query.trim().length > 0;
 

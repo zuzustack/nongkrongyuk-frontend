@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Place } from "@/src/providers/SelectedPlaceProvider";
+import { getDistance } from "@/src/utils/distance";
 
 export interface FilterState {
   categories: string[];
@@ -36,7 +37,7 @@ interface FilterContextValue {
   filters: FilterState;
   setFilters: (filters: FilterState) => void;
   resetFilters: () => void;
-  applyFilters: (places: Place[]) => Place[];
+  applyFilters: (places: Place[], mosques?: any[]) => Place[];
   activeFilterCount: number;
 }
 
@@ -50,7 +51,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const applyFilters = useCallback(
-    (places: Place[]): Place[] => {
+    (places: Place[], mosques: any[] = []): Place[] => {
       return places.filter((place) => {
         // Category filter
         if (
@@ -70,11 +71,19 @@ export function FilterProvider({ children }: { children: ReactNode }) {
         ) {
           return false;
         }
-        if (
-          filters.facilities.musholla &&
-          !place.facilities.has_musholla
-        ) {
-          return false;
+        if (filters.facilities.musholla) {
+          if (!place.facilities.has_musholla) {
+            // Check if there is a mosque within 500m
+            if (place.position) {
+              const hasNearbyMosque = mosques.some((m) => {
+                if (!m.position) return false;
+                return getDistance(place.position, m.position as [number, number]) <= 500;
+              });
+              if (!hasNearbyMosque) return false;
+            } else {
+              return false;
+            }
+          }
         }
 
         // Price level filter

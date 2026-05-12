@@ -186,7 +186,7 @@ export default function Map() {
   const { applyFilters } = useFilter();
 
   // Apply active filters — only filtered markers are rendered
-  const filteredCafes = cafes ? applyFilters(cafes as any) : [];
+  const filteredCafes = cafes ? applyFilters(cafes as any, (mosques as any) || []) : [];
   const markerRefs = useRef<Record<string, any>>({});
 
   if (isLoading)
